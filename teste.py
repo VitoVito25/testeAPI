@@ -13,8 +13,17 @@ print("Conexão Bem Sucedida")
 
 cursor = connection.cursor()
 
-comando = """INSERT INTO usuario (nome, email, senha, papel) 
-            VALUES ('Maria Oliveira', 'maria.oliveira@example.com', 'senha456', 'admin')"""
+cursor.close()
+connection.close()
 
+
+#CREATE
+#comando = """INSERT INTO usuario (nome, email, senha, papel) 
+#            VALUES ('Maria Oliveira', 'maria.oliveira@e.com', 'senha456', 'admin')"""
+#cursor.commit()
+
+
+comando = "SELECT * FROM usuario"
 cursor.execute(comando)
-cursor.commit()
+resultado = cursor.fetchall()
+print(resultado [1] [2])
