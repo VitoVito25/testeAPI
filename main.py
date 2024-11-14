@@ -1,5 +1,5 @@
 from Database_Folder.Database import Database
-from Database_Folder.Usuario import Usuario
+from Database_Folder.Usuario.Usuario import Usuario
 
 def main():
     # Define os parametros para conectar ao banco de dados
