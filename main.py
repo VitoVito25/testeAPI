@@ -15,10 +15,12 @@ def main():
     # Tenta conectar ao banco de dados
     db.connect()
 
-    new_user = Usuario.get_by_id(db, 5)
+    new_user = Usuario.get_by_id(db, 1)
     print(new_user)
 
-    print(new_user.nome)
+    del_user = Usuario.get_by_id(db, 4)
+    del_user.delete(db)
+
 
 
     # Desconecta do banco de dados
