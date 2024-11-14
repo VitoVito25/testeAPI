@@ -1,4 +1,4 @@
-import Usuario
+import src.models.Usuario as Usuario
 
 class UserService:
     def __init__(self, db):

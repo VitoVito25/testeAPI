@@ -1,5 +1,6 @@
-from Database_Folder.Database import Database
-from Database_Folder.Usuario.Usuario import Usuario
+from database.Database import Database
+from src.models.Usuario import Usuario
+from flask import Flask, jsonify
 
 def main():
     # Define os parametros para conectar ao banco de dados
@@ -15,13 +16,14 @@ def main():
     # Tenta conectar ao banco de dados
     db.connect()
 
-    new_user = Usuario.get_by_id(db, 1)
-    print(new_user)
-
-    del_user = Usuario.get_by_id(db, 4)
-    del_user.delete(db)
+    app = Flask(__name__)
 
 
+    @app.route('/kaio')
+    def kaio():
+        return 'Kaiao bonilha'
+    
+    app.run(host='0.0.0.0')
 
     # Desconecta do banco de dados
     db.disconnect()
