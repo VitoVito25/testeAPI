@@ -40,6 +40,6 @@ class App:
         if not self.app:
             raise Exception("App não foi inicializado. Chame o método `initialize` antes de rodar o servidor.")
         
-        self.app.run(host='0.0.0.0', port=5000, debug=True)
+        self.app.run(host='0.0.0.0', port=5000, debug=True) # lembrar de tirar o debug no momento de lançamento
 
 
