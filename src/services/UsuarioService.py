@@ -1,55 +1,51 @@
-import src.models.Usuario as Usuario
+from models.Usuario import Usuario
 
-class UserService:
+class UsuarioService:
     def __init__(self, db):
         self.db = db
 
-    def create_user(self, name, email, password, role):
-        # Validation for NOT NULL fields
-        if not name or not email or not password or not role:
-            print("Error: All fields (name, email, password, role) must be provided.")
-            return
-
+    def create_user(self, nome, email, senha, papel):
+        if not nome or not email or not senha or not papel:
+            raise ValueError("Todos os campos (nome, email, senha, papel) devem ser fornecidos.")
+        
         try:
-            user = Usuario(nome=name, email=email, senha=password, papel=role)
+            user = Usuario(nome=nome, email=email, senha=senha, papel=papel)
             user.create(self.db)
-            print(f"User {name} created successfully.")
         except Exception as e:
-            print(f"Error creating user: {e}")
+            print(f"Erro ao criar usuário: {e}")
+            raise
 
     def get_user_by_id(self, user_id):
         try:
             user = Usuario.get_by_id(self.db, user_id)
             if user:
-                print(f"User found: {user}")
-            else:
-                print(f"User with ID {user_id} not found.")
+                return user
+            return None
         except Exception as e:
-            print(f"Error retrieving user by ID: {e}")
-    
-    def update_user(self, user_id, name=None, email=None, password=None, role=None):
-        # Validation for NOT NULL fields during update
-        if name is None and email is None and password is None and role is None:
-            print("Error: At least one field (name, email, password, or role) must be provided for update.")
-            return
+            print(f"Erro ao buscar usuário: {e}")
+            raise
 
+    def update_user(self, user_id, nome=None, email=None, senha=None, papel=None):
+        if nome is None and email is None and senha is None and papel is None:
+            raise ValueError("Pelo menos um campo (nome, email, senha, papel) deve ser fornecido para atualizar.")
+        
         try:
             user = Usuario.get_by_id(self.db, user_id)
             if user:
-                if name:
-                    user.set_nome(name)
+                if nome:
+                    user.set_nome(nome)
                 if email:
                     user.set_email(email)
-                if password:
-                    user.set_senha(password)
-                if role:
-                    user.set_papel(role)
+                if senha:
+                    user.set_senha(senha)
+                if papel:
+                    user.set_papel(papel)
                 user.update(self.db)
-                print(f"User with ID {user_id} updated successfully.")
             else:
-                print(f"User with ID {user_id} not found.")
+                raise ValueError(f"Usuário com ID {user_id} não encontrado.")
         except Exception as e:
-            print(f"Error updating user: {e}")
+            print(f"Erro ao atualizar usuário: {e}")
+            raise
 
     def delete_user(self, user_id):
         try:
@@ -57,6 +53,7 @@ class UserService:
             if user:
                 user.delete(self.db)
             else:
-                print(f"User with ID {user_id} not found.")
+                raise ValueError(f"Usuário com ID {user_id} não encontrado.")
         except Exception as e:
-            print(f"Error deleting user: {e}")
+            print(f"Erro ao deletar usuário: {e}")
+            raise
