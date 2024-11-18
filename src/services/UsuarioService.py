@@ -25,6 +25,35 @@ class UsuarioService:
             print(f"Erro ao buscar usuário: {e}")
             raise
 
+    def get_user_by_email(self, email):
+        try:
+            cursor = self.db.cursor()
+            query = "SELECT id, nome, email, senha, papel FROM usuarios WHERE email = ?"
+            cursor.execute(query, (email,))
+            row = cursor.fetchone()
+
+            if row:
+                return Usuario(row[0], row[1], row[2], row[3], row[4])  # Atualize de acordo com a classe do modelo
+            return None
+        except Exception as e:
+            raise Exception(f"Erro ao buscar usuário pelo email: {str(e)}")
+
+    def get_all_users(self):
+        try:
+            cursor = self.db.cursor()
+            query = "SELECT id, nome, email, papel FROM usuarios"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+
+            users = []
+            for row in rows:
+                user = Usuario(row[0], row[1], row[2], row[3])
+                users.append(user)
+
+            return users
+        except Exception as e:
+            raise Exception(f"Erro ao buscar todos os usuários: {str(e)}")
+
     def update_user(self, user_id, nome=None, email=None, senha=None, papel=None):
         if nome is None and email is None and senha is None and papel is None:
             raise ValueError("Pelo menos um campo (nome, email, senha, papel) deve ser fornecido para atualizar.")
