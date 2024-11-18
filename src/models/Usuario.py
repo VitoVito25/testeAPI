@@ -93,3 +93,25 @@ class Usuario:
         if result:
             return cls(*result)
         return None
+    
+    @classmethod
+    def get_all(cls, db):
+        """Método para buscar todos os usuários"""
+        try:
+            cursor = db.get_cursor()
+            query = "SELECT id, nome, email, senha, papel FROM usuario"
+            cursor.execute(query)
+
+            users = []
+            rows = cursor.fetchall()
+
+            # Se houver resultados, criar objetos Usuario
+            if rows:
+                for row in rows:
+                    print(f"Desempacotando a linha: {row}")
+                    user = cls(*row)  # Desempacota os valores da linha diretamente para o construtor
+                    users.append(user)
+
+            return users
+        except Exception as e:
+            raise Exception(f"Erro ao listar usuários: {str(e)}")

@@ -27,7 +27,6 @@ class UsuarioService:
 
     def get_user_by_email(self, email):
         try:
-            # Chama o método get_by_email da classe Usuario
             user = Usuario.get_by_email(self.db, email)
             if user:
                 return user
@@ -37,20 +36,13 @@ class UsuarioService:
             raise
         
     def get_all_users(self):
+        """Busca todos os usuários"""
         try:
-            cursor = self.db.cursor()
-            query = "SELECT id, nome, email, papel FROM usuarios"
-            cursor.execute(query)
-            rows = cursor.fetchall()
-
-            users = []
-            for row in rows:
-                user = Usuario(row[0], row[1], row[2], row[3])
-                users.append(user)
-
+            users = Usuario.get_all(self.db)
             return users
         except Exception as e:
-            raise Exception(f"Erro ao buscar todos os usuários: {str(e)}")
+            print(f"Erro ao listar usuários no serviço: {e}")
+            raise
 
     def update_user(self, user_id, nome=None, email=None, senha=None, papel=None):
         if nome is None and email is None and senha is None and papel is None:
