@@ -9,6 +9,7 @@ from controllers.PessoaController import PessoaController
 from controllers.ContaController import ContaController
 from controllers.UsuarioEmpresaController import UsuarioEmpresaController
 from controllers.CategoriaMovimentacaoFinanceiraController import CategoriaMovimentacaoFinanceiraController
+from controllers.MovimentacaoFinanceiraController import MovimentacaoFinanceiraController
 
 class App:
     def __init__(self):
@@ -59,6 +60,9 @@ class App:
 
             categoria_movimentacao_financeira_controller = CategoriaMovimentacaoFinanceiraController(self.db)
             self.app.register_blueprint(categoria_movimentacao_financeira_controller.categoria_movimentacao_financeira_bp)
+
+            movimentacao_financeira_controller = MovimentacaoFinanceiraController(self.db)
+            self.app.register_blueprint(movimentacao_financeira_controller.movimentacao_financeira_bp)
 
         # Registrar a desconexão do banco de dados ao final da execução
         atexit.register(lambda: self.db.disconnect())
