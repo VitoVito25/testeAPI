@@ -31,9 +31,10 @@ class App:
         self.app = Flask(__name__)
         self.app.config.from_object(Config)
 
-        # Inicializa o controlador de usuários e registra as rotas
-        usuario_controller = UsuarioController(self.db)
-        self.app.register_blueprint(usuario_controller.usuario_bp)
+        # Inicializa o controlador de usuários e registra as rotas dentro do contexto da aplicação
+        with self.app.app_context():
+            usuario_controller = UsuarioController(self.db)
+            self.app.register_blueprint(usuario_controller.usuario_bp)
 
         # Registrar a desconexão do banco de dados ao final da execução
         atexit.register(lambda: self.db.disconnect())
@@ -44,4 +45,10 @@ class App:
         
         self.app.run(host='0.0.0.0', port=5000, debug=True) # lembrar de tirar o debug no momento de lançamento
 
+def main():
+    app = App()
+    app.initialize()
+    app.run()
 
+if __name__ == "__main__":
+    main()

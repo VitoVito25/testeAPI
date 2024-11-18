@@ -8,17 +8,18 @@ class UsuarioController:
         self.db = db
         self.user_service = UsuarioService(db)
         self.usuario_bp = Blueprint('usuario', __name__)
-        self.auth = None
 
         # Definir as rotas
         self._add_routes()
 
     def _add_routes(self):
+        self.auth = Auth(current_app.config['SECRET_KEY'])  # Inicialize o Auth
+
         self.usuario_bp.add_url_rule('/usuarios', 'create_user', self.create_user, methods=['POST'])
         self.usuario_bp.add_url_rule('/usuarios/<int:user_id>', 'get_user', self.get_user, methods=['GET'])
         self.usuario_bp.add_url_rule('/usuarios', 'list_users', self.list_users, methods=['GET']) 
         self.usuario_bp.add_url_rule('/usuarios/<int:user_id>', 'update_user', self.update_user, methods=['PUT'])
-        self.usuario_bp.add_url_rule('/usuarios/<int:user_id>', 'delete_user', self.delete_user, methods=['DELETE'])
+        self.usuario_bp.add_url_rule('/usuarios/<int:user_id>', 'delete_user', self.auth.token_required(self.delete_user), methods=['DELETE'])
         self.usuario_bp.add_url_rule('/login', 'login', self.login, methods=['POST'])
 
     def create_user(self):
@@ -76,7 +77,6 @@ class UsuarioController:
         except Exception as e:
             return jsonify({"error": f"Erro ao atualizar usuário: {str(e)}"}), 400
 
-    @token_required
     def delete_user(self, user_id):
         try:
             self.user_service.delete_user(user_id)
@@ -85,10 +85,6 @@ class UsuarioController:
             return jsonify({"error": f"Erro ao deletar usuário: {str(e)}"}), 400
 
     def login(self):
-        
-        # Inicializando o Auth dentro do método onde o contexto de aplicação já está disponível
-        if not self.auth:
-            self.auth = Auth(current_app.config['SECRET_KEY'])
 
         try:
             data = request.json

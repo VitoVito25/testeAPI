@@ -108,7 +108,6 @@ class Usuario:
             # Se houver resultados, criar objetos Usuario
             if rows:
                 for row in rows:
-                    print(f"Desempacotando a linha: {row}")
                     user = cls(*row)  # Desempacota os valores da linha diretamente para o construtor
                     users.append(user)
 
