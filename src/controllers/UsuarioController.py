@@ -76,6 +76,7 @@ class UsuarioController:
         except Exception as e:
             return jsonify({"error": f"Erro ao atualizar usuário: {str(e)}"}), 400
 
+    @token_required
     def delete_user(self, user_id):
         try:
             self.user_service.delete_user(user_id)
