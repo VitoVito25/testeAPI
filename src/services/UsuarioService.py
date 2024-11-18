@@ -27,17 +27,15 @@ class UsuarioService:
 
     def get_user_by_email(self, email):
         try:
-            cursor = self.db.cursor()
-            query = "SELECT id, nome, email, senha, papel FROM usuarios WHERE email = ?"
-            cursor.execute(query, (email,))
-            row = cursor.fetchone()
-
-            if row:
-                return Usuario(row[0], row[1], row[2], row[3], row[4])  # Atualize de acordo com a classe do modelo
+            # Chama o método get_by_email da classe Usuario
+            user = Usuario.get_by_email(self.db, email)
+            if user:
+                return user
             return None
         except Exception as e:
-            raise Exception(f"Erro ao buscar usuário pelo email: {str(e)}")
-
+            print(f"Erro ao buscar usuário pelo email: {e}")
+            raise
+        
     def get_all_users(self):
         try:
             cursor = self.db.cursor()

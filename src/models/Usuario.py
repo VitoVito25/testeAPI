@@ -83,3 +83,13 @@ class Usuario:
 
     def __str__(self):
         return f"Usuario(ID: {self.id}, Nome: {self.nome}, Email: {self.email}, Papel: {self.papel})"
+    
+    @classmethod
+    def get_by_email(cls, db, email):
+        cursor = db.get_cursor()
+        query = "SELECT id, nome, email, senha, papel FROM usuario WHERE email = ?"
+        cursor.execute(query, (email,))
+        result = cursor.fetchone()
+        if result:
+            return cls(*result)
+        return None

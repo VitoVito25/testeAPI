@@ -2,7 +2,7 @@ import jwt
 import datetime
 from flask import Blueprint, request, jsonify, current_app
 from services.UsuarioService import UsuarioService
-from werkzeug.security import check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class UsuarioController:
     def __init__(self, db):
@@ -37,7 +37,10 @@ class UsuarioController:
             senha = data.get('senha')
             papel = data.get('papel')
 
-            self.user_service.create_user(nome, email, senha, papel)
+            # Criptografar a senha antes de salvar
+            hashed_password = generate_password_hash(senha)
+
+            self.user_service.create_user(nome, email, hashed_password, papel)
             return jsonify({"message": "Usuário criado com sucesso!"}), 201
         except Exception as e:
             return jsonify({"error": f"Erro ao criar usuário: {str(e)}"}), 400
@@ -59,7 +62,10 @@ class UsuarioController:
             senha = data.get('senha')
             papel = data.get('papel')
 
-            self.user_service.update_user(user_id, nome, email, senha, papel)
+            # Criptografar a senha antes de atualizar
+            hashed_password = generate_password_hash(senha) if senha else None
+
+            self.user_service.update_user(user_id, nome, email, hashed_password, papel)
             return jsonify({"message": f"Usuário com ID {user_id} atualizado com sucesso!"}), 200
         except Exception as e:
             return jsonify({"error": f"Erro ao atualizar usuário: {str(e)}"}), 400
@@ -77,24 +83,16 @@ class UsuarioController:
             email = data.get('email')
             senha = data.get('senha')
 
-            # Buscar o usuário pelo email
+            # Buscar o usuário pelo email usando o service
             user = self.user_service.get_user_by_email(email)
             if not user:
                 return jsonify({"error": "Usuário não encontrado"}), 404
 
             # Validar a senha
             if check_password_hash(user.get_senha(), senha):
-                # Gerar token JWT
-                payload = {
-                    "user_id": user.get_id(),
-                    "email": user.get_email(),
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)  # Token expira em 2 horas
-                }
-                token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
-
+                # Geração de token (opcional)
                 return jsonify({
                     "message": "Login bem-sucedido",
-                    "token": token,
                     "user": {
                         "id": user.get_id(),
                         "nome": user.get_nome(),
@@ -106,3 +104,4 @@ class UsuarioController:
                 return jsonify({"error": "Senha incorreta"}), 401
         except Exception as e:
             return jsonify({"error": f"Erro ao realizar login: {str(e)}"}), 400
+

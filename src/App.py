@@ -2,6 +2,7 @@ import atexit
 from flask import Flask
 from controllers.UsuarioController import UsuarioController
 from database.Database import Database
+from config import Config
 
 class App:
     def __init__(self):
@@ -28,6 +29,7 @@ class App:
 
         # Inicializa o aplicativo Flask
         self.app = Flask(__name__)
+        self.app.config.from_object(Config)
 
         # Inicializa o controlador de usuários e registra as rotas
         usuario_controller = UsuarioController(self.db)
