@@ -1,7 +1,6 @@
-CREATE TABLE empresa (
+CREATE TABLE categoria_pessoa (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    cnpj VARCHAR(18) UNIQUE,
+    nome VARCHAR(50) NOT NULL,
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_modificacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,9 +1,10 @@
 import atexit
 from flask import Flask
-from controllers.UsuarioController import UsuarioController
-from controllers.EmpresaController import EmpresaController
 from database.Database import Database
 from config import Config
+from controllers.UsuarioController import UsuarioController
+from controllers.EmpresaController import EmpresaController
+from controllers.CategoriaPessoaController import CategoriaPessoaController
 
 class App:
     def __init__(self):
@@ -39,6 +40,9 @@ class App:
 
             empresa_controller = EmpresaController(self.db)
             self.app.register_blueprint(empresa_controller.empresa_bp)
+
+            categoria_pessoa_controller = CategoriaPessoaController(self.db)
+            self.app.register_blueprint(categoria_pessoa_controller.categoria_pessoa_bp)
 
         # Registrar a desconexão do banco de dados ao final da execução
         atexit.register(lambda: self.db.disconnect())
